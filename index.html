@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stardew Valley 1x1 Farm</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        /* ====================== CSS ====================== */
+        body {
+            background-color: #2c3e50;
+            font-family: 'VT323', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #523620;
+        }
+        .game-container {
+            background-color: #ffdd99;
+            border: 8px solid #8b4513;
+            border-radius: 10px;
+            padding: 15px;
+            width: 95%;
+            max-width: 650px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #d14008;
+            text-shadow: 2px 2px #f5ce85;
+            margin-top: 0;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+        .season-selector {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        select {
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            padding: 5px;
+            border: 3px solid #8b4513;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #523620;
+            cursor: pointer;
+            max-width: 100%;
+        }
+        /* Dialog Box */
+        .dialog-box {
+            background-color: #fff;
+            border: 4px solid #8b4513;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            min-height: 80px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+        .portrait {
+            background-color: #aeeeee;
+            border: 3px solid #523620;
+            width: 70px;
+            height: 70px;
+            min-width: 70px;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        .portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .dialog-content p {
+            margin: 0;
+            font-size: 1.3rem;
+            text-align: left;
+            line-height: 1.1;
+        }
+        /* Controls */
+        .controls {
+            background-color: #e6c485;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px dashed #8b4513;
+            margin-bottom: 15px;
+        }
+        .equation-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            flex-wrap: wrap;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        .x-sign { margin: 0 10px; color: #8b4513; font-weight: bold; }
+        .equals-sign { margin-left: 40px; margin-right: 10px; }
+        input[type=number] {
+            width: 60px;
+            height: 50px;
+            font-family: 'VT323', monospace;
+            font-size: 2rem;
+            text-align: center;
+            border: 3px solid #8b4513;
+            border-radius: 5px;
+            color: #523620;
+            transform: scale(1.5);
+            transform-origin: center;
+            margin: 0 5px;
+        }
+        /* Buttons */
+        button {
+            font-family: 'VT323', monospace;
+            font-size: 1.4rem;
+            padding: 8px 15px;
+            border: 3px solid #523620;
+            background-color: #66cc66;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #3e8e41;
+            margin: 5px;
+            touch-action: manipulation;
+        }
+        button:active { transform: translateY(4px); box-shadow: 0 0 0 #3e8e41; }
+        .random-btn { background-color: #4a90e2; box-shadow: 0 4px 0 #2c5f99; }
+        .random-btn:active { box-shadow: 0 0 0 #2c5f99; }
+        .plant-btn { width: 100%; display: block; margin-top: 10px; }
+        .button-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .button-stack button { width: 100%; margin: 0 0 5px 0; }
+        /* Lösungszone */
+        .solution-zone {
+            margin-top: 15px;
+            background-color: #fff8e1;
+            border: 3px dashed #d48c55;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .solution-zone label {
+            display: block;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #8b4513;
+        }
+        .solution-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .solution-controls input {
+            background-color: #fff;
+            border-color: #4a7a32;
+            width: 80px;
+        }
+        .harvest-btn { background-color: #ffa500; box-shadow: 0 4px 0 #cc8400; }
+        .harvest-btn:active { box-shadow: 0 0 0 #cc8400; }
+        /* Farm-Bereich */
+        .farm-area {
+            border: 4px solid #4a7a32;
+            padding: 10px;
+            min-height: 200px;
+            border-radius: 8px;
+            position: relative;
+            transition: background-color 0.5s;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+        }
+        .farm-area.spring { background-color: #65a643; border-color: #4a7a32; }
+        .farm-area.summer { background-color: #dfc028; border-color: #b0951d; }
+        .farm-area.fall { background-color: #d48c55; border-color: #8c5328; }
+        .grid {
+            display: grid;
+            gap: 3px;
+            justify-content: center;
+            max-width: 100%;
+            align-items: center;
+            justify-items: center;
+        }
+        .grid-label {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .row-label { font-size: 1rem; white-space: nowrap; padding: 0 4px; }
+        .crop {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            cursor: default;
+            transform: scale(0);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        #horse-container {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            font-size: 50px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .hidden { display: none; }
+        .horse-sound {
+            font-size: 16px;
+            background: white;
+            padding: 2px 5px;
+            border-radius: 5px;
+            position: absolute;
+            top: -10px;
+            right: 5px;
+            border: 2px solid black;
+            white-space: nowrap;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        @media (max-width: 600px) {
+            .game-container { padding: 10px; width: 98%; border-width: 5px; }
+            h1 { font-size: 2rem; }
+            .dialog-content p { font-size: 1.1rem; }
+            .portrait { width: 60px; height: 60px; min-width: 60px; }
+            .equation-wrapper { font-size: 1.5rem; }
+            .crop { width: 26px; height: 26px; font-size: 18px; }
+            .grid-label { font-size: 1rem; }
+            .row-label { font-size: 0.8rem; }
+            .grid { gap: 2px; }
+            .equals-sign { margin-left: 15px; margin-right: 5px; }
+            .solution-controls { flex-direction: column; }
+            .solution-controls input, .solution-controls button { width: 100%; margin: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Stardew Valley 1x1 Farm</h1>
+
+        <div class="season-selector">
+            <label>Jahreszeit wählen:</label>
+            <select id="season-select" onchange="changeSeason()">
+                <option value="spring">Frühling (Leicht: 1-4)</option>
+                <option value="summer">Sommer (Mittel: 5-7)</option>
+                <option value="fall">Herbst (Schwer: 8-10)</option>
+            </select>
+        </div>
+
+        <div class="dialog-box">
+            <div class="portrait">
+                <img src="https://stardewvalleywiki.com/mediawiki/images/c/c2/Emily_Beach_Happy.png" alt="Emily">
+            </div>
+            <div class="dialog-content">
+                <p id="emily-text">...</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="equation-wrapper">
+                <div class="input-group">
+                    <input type="number" id="factor1" min="1" max="10" value="2">
+                    <span class="operator x-sign">✖</span>
+                    <input type="number" id="factor2" min="1" max="10" value="3">
+                </div>
+                <span class="operator equals-sign">=</span>
+                <span id="result-display">?</span>
+            </div>
+
+            <div class="button-stack">
+                <button onclick="randomizeNumbers()" class="random-btn">Neue Felder anpflanzen</button>
+                <button onclick="plantCrops()" class="plant-btn">Felder anzeigen</button>
+            </div>
+        </div>
+
+        <div class="farm-area spring" id="farm-area">
+            <div id="farm-grid" class="grid"></div>
+            <div id="horse-container" class="hidden">
+                <span class="horse-sound">Wieher!</span>
+            </div>
+        </div>
+
+        <div class="solution-zone">
+            <label for="user-input">So viel Dünger müssen wir kaufen:</label>
+            <div class="solution-controls">
+                <input type="number" id="user-input" placeholder="?">
+                <button onclick="checkSolution()" class="harvest-btn">Lösung</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================== JavaScript ======================
+        const input1 = document.getElementById('factor1');
+        const input2 = document.getElementById('factor2');
+        const grid = document.getElementById('farm-grid');
+        const resultDisplay = document.getElementById('result-display');
+        const emilyText = document.getElementById('emily-text');
+        const horseContainer = document.getElementById('horse-container');
+        const farmArea = document.getElementById('farm-area');
+        const seasonSelect = document.getElementById('season-select');
+        const userInput = document.getElementById('user-input');
+
+        const seasonData = {
+            spring: { crops: ['🌷', '🥔', '🍓', '🫛', '🥕'], range: [1, 4], name: 'Frühling' },
+            summer: { crops: ['🌽', '🌻', '🫐', '🍈', '🌶️'], range: [5, 7], name: 'Sommer' },
+            fall:   { crops: ['🎃', '🍆', '🍇', '🍠', '🍄'], range: [8, 10], name: 'Herbst' }
+        };
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function changeSeason() {
+            const season = seasonSelect.value;
+            const data = seasonData[season];
+            farmArea.className = `farm-area ${season}`;
+            randomizeNumbers();
+            grid.innerHTML = '';
+            resultDisplay.innerText = "?";
+            horseContainer.classList.add('hidden');
+            emilyText.innerText = `Der ${data.name} ist da! Neuer Zahlenraum (${data.range[0]}-${data.range[1]}).`;
+        }
+
+        function randomizeNumbers() {
+            const season = seasonSelect.value;
+            const data = seasonData[season];
+            input1.value = getRandomInt(data.range[0], data.range[1]);
+            input2.value = getRandomInt(1, 10);
+
+            resultDisplay.innerText = "?";
+            resultDisplay.style.color = "#523620";
+            grid.innerHTML = '';
+            horseContainer.classList.add('hidden');
+            userInput.value = "";
+            userInput.style.backgroundColor = "#fff";
+
+            emilyText.innerText = "Ich habe neue Felder geplant! Klicke auf 'Felder anzeigen', um zu sehen wie viele es sind.";
+        }
+
+        function plantCrops() {
+            let rows = parseInt(input1.value) || 1;
+            let cols = parseInt(input2.value) || 1;
+            rows = Math.max(1, Math.min(10, rows));
+            cols = Math.max(1, Math.min(10, cols));
+            input1.value = rows;
+            input2.value = cols;
+
+            grid.innerHTML = '';
+            resultDisplay.innerText = "?";
+            resultDisplay.style.color = "#523620";
+            horseContainer.classList.add('hidden');
+            userInput.value = "";
+            userInput.style.backgroundColor = "#fff";
+
+            const season = seasonSelect.value;
+            const possibleCrops = seasonData[season].crops;
+            const currentCrop = possibleCrops[Math.floor(Math.random() * possibleCrops.length)];
+
+            emilyText.innerText = `Hier sind ${rows} Reihen mit je ${cols} Pflanzen. Wie viel Dünger brauchen wir insgesamt?`;
+
+            grid.style.gridTemplateColumns = `auto repeat(${cols}, 1fr)`;
+            grid.style.width = "fit-content";
+
+            // Ecke leer
+            grid.appendChild(document.createElement('div'));
+
+            // Spalten-Labels
+            for (let c = 1; c <= cols; c++) {
+                let label = document.createElement('div');
+                label.classList.add('grid-label');
+                label.innerText = c;
+                grid.appendChild(label);
+            }
+
+            // Reihen mit Inhalt
+            for (let r = 1; r <= rows; r++) {
+                let rowLabel = document.createElement('div');
+                rowLabel.classList.add('grid-label', 'row-label');
+                rowLabel.innerText = "L " + r;
+                grid.appendChild(rowLabel);
+
+                for (let c = 1; c <= cols; c++) {
+                    let delayIndex = (r-1) * cols + (c-1);
+                    const plot = document.createElement('div');
+                    plot.classList.add('crop');
+                    plot.innerText = currentCrop;
+                    plot.title = `Linie ${r}, Spalte ${c}`;
+                    plot.style.animationDelay = `${delayIndex * 30}ms`;
+                    grid.appendChild(plot);
+                }
+            }
+        }
+
+        function checkSolution() {
+            let f1 = parseInt(input1.value);
+            let f2 = parseInt(input2.value);
+            let correctResult = f1 * f2;
+            let userResult = parseInt(userInput.value);
+
+            if (userResult === correctResult) {
+                resultDisplay.innerText = correctResult;
+                resultDisplay.style.color = "#d14008";
+                userInput.style.backgroundColor = "#90ee90";
+                emilyText.innerText = `Richtig! ${f1} mal ${f2} ergibt ${correctResult} Felder. Wir kaufen ${correctResult}x Dünger!`;
+                horseContainer.classList.remove('hidden');
+                horseContainer.style.transform = "translateY(-10px)";
+                setTimeout(() => horseContainer.style.transform = "translateY(0)", 200);
+            } else {
+                userInput.style.backgroundColor = "#ffcccb";
+                horseContainer.classList.add('hidden');
+                if (isNaN(userResult)) {
+                    emilyText.innerText = "Du hast noch keine Zahl eingegeben. Versuch es mal!";
+                } else if (userResult < correctResult) {
+                    emilyText.innerText = `Nicht ganz. ${userResult} ist zu wenig. Zähl nochmal genau nach!`;
+                } else {
+                    emilyText.innerText = `Nicht ganz. ${userResult} ist zu viel. Zähl nochmal genau nach!`;
+                }
+            }
+        }
+
+        // Start
+        window.onload = () => {
+            randomizeNumbers();
+            plantCrops();
+            emilyText.innerText = "Ich bin es, Emily! Auf unserem Bauernhof habe ich neue Felder angelegt, allerdings habe ich vergessen sie zu düngen. Kannst du herausfinden, wie viele Felder Dünger wir kaufen müssen?";
+        };
+    </script>
+</body>
+</html>
