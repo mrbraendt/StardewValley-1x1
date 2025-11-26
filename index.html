@@ -224,9 +224,12 @@
             position: absolute;
             bottom: 0px;
             right: 0px;
-            font-size: 50px;
             z-index: 10;
             pointer-events: none;
+        }
+        .horse-emoji {
+            font-size: 50px;
+            filter: drop-shadow(0 0 6px #fff);
         }
         .hidden { display: none; }
         .horse-sound {
@@ -239,6 +242,25 @@
             right: 5px;
             border: 2px solid black;
             white-space: nowrap;
+        }
+        .farm-area.correct {
+            box-shadow: 0 0 18px 4px rgba(255, 255, 255, 0.9);
+        }
+        .row-sum-cell {
+            font-size: 1.1rem;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.45);
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .row-sum-cell:hover {
+            background-color: rgba(0, 0, 0, 0.6);
         }
         @keyframes popIn {
             0% { transform: scale(0); }
@@ -302,6 +324,7 @@
         <div class="farm-area spring" id="farm-area">
             <div id="farm-grid" class="grid"></div>
             <div id="horse-container" class="hidden">
+                <span class="horse-emoji">🐴</span>
                 <span class="horse-sound">Wieher!</span>
             </div>
         </div>
@@ -385,7 +408,8 @@
 
             emilyText.innerText = `Hier sind ${rows} Reihen mit je ${cols} Pflanzen. Wie viel Dünger brauchen wir insgesamt?`;
 
-            grid.style.gridTemplateColumns = `auto repeat(${cols}, 1fr)`;
+            // Zusätzliche Spalte am Zeilenende für das Auge / die Summenanzeige
+            grid.style.gridTemplateColumns = `auto repeat(${cols}, 1fr) auto`;
             grid.style.width = "fit-content";
 
             // Ecke leer
@@ -398,6 +422,12 @@
                 label.innerText = c;
                 grid.appendChild(label);
             }
+
+            // Kopfzelle für die Summen-Spalte, damit die L-Labels korrekt untereinander ausgerichtet sind
+            const sumHeader = document.createElement('div');
+            sumHeader.classList.add('grid-label');
+            sumHeader.innerText = '👁️';
+            grid.appendChild(sumHeader);
 
             // Reihen mit Inhalt
             for (let r = 1; r <= rows; r++) {
@@ -414,6 +444,35 @@
                     plot.title = `Linie ${r}, Spalte ${c}`;
                     plot.style.animationDelay = `${delayIndex * 30}ms`;
                     grid.appendChild(plot);
+                }
+
+                // Auge-Emoji am Zeilenende, das sich in die kumulierte Summe verwandelt
+                const eyeCell = document.createElement('div');
+                eyeCell.classList.add('row-sum-cell');
+                eyeCell.innerText = '👁️';
+                eyeCell.title = 'Klicke, um die Gesamtzahl der Felder bis zu dieser Reihe zu sehen';
+                eyeCell.dataset.row = r;
+                eyeCell.dataset.cols = cols;
+                eyeCell.dataset.showingSum = 'false';
+                eyeCell.addEventListener('click', toggleRowSum);
+                grid.appendChild(eyeCell);
+            }
+        }
+
+        function toggleRowSum(event) {
+            const cell = event.currentTarget;
+            const row = parseInt(cell.dataset.row);
+            const cols = parseInt(cell.dataset.cols);
+            const isShowingSum = cell.dataset.showingSum === 'true';
+
+            if (!isNaN(row) && !isNaN(cols)) {
+                if (isShowingSum) {
+                    cell.innerText = '👁️';
+                    cell.dataset.showingSum = 'false';
+                } else {
+                    const cumulative = row * cols;
+                    cell.innerText = cumulative;
+                    cell.dataset.showingSum = 'true';
                 }
             }
         }
@@ -432,9 +491,12 @@
                 horseContainer.classList.remove('hidden');
                 horseContainer.style.transform = "translateY(-10px)";
                 setTimeout(() => horseContainer.style.transform = "translateY(0)", 200);
+                farmArea.classList.add('correct');
+                setTimeout(() => farmArea.classList.remove('correct'), 600);
             } else {
                 userInput.style.backgroundColor = "#ffcccb";
                 horseContainer.classList.add('hidden');
+                farmArea.classList.remove('correct');
                 if (isNaN(userResult)) {
                     emilyText.innerText = "Du hast noch keine Zahl eingegeben. Versuch es mal!";
                 } else if (userResult < correctResult) {
