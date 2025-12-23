@@ -36,6 +36,29 @@
             margin-bottom: 10px;
             line-height: 1;
         }
+        .points-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 3px solid #d48c55;
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #8b4513;
+        }
+        .points-label {
+            font-size: 1.4rem;
+        }
+        #points-counter {
+            color: #d14008;
+            font-size: 1.6rem;
+            min-width: 30px;
+            text-align: center;
+        }
         .season-selector {
             margin-bottom: 15px;
             font-size: 1.2rem;
@@ -43,13 +66,14 @@
         select {
             font-family: 'VT323', monospace;
             font-size: 1.2rem;
-            padding: 5px;
+            padding: 12px;
             border: 3px solid #8b4513;
             border-radius: 5px;
             background-color: #fff;
             color: #523620;
             cursor: pointer;
             max-width: 100%;
+            min-height: 44px;
         }
         /* Dialog Box */
         .dialog-box {
@@ -62,6 +86,11 @@
             margin-bottom: 15px;
             min-height: 80px;
             box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dialog-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.15);
         }
         .portrait {
             background-color: #aeeeee;
@@ -106,25 +135,34 @@
             align-items: center;
         }
         .x-sign { margin: 0 10px; color: #8b4513; font-weight: bold; }
-        .equals-sign { margin-left: 40px; margin-right: 10px; }
+            .equals-sign { margin-left: 40px; margin-right: 10px; }
+            #result-display {
+                transition: color 0.5s ease, transform 0.3s ease;
+            }
         input[type=number] {
-            width: 50px;
-            height: 42px;
+            width: 60px;
+            height: 48px;
             font-family: 'VT323', monospace;
             font-size: 1.6rem;
             text-align: center;
             border: 3px solid #8b4513;
             border-radius: 5px;
             color: #523620;
-            transform: scale(1.2);
+            transform: scale(1.1);
             transform-origin: center;
             margin: 0 5px;
+            min-height: 44px;
+            transition: border-color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+        }
+        input[type=number]:focus {
+            border-color: #d14008;
+            transform: scale(1.15);
         }
         /* Buttons */
         button {
             font-family: 'VT323', monospace;
             font-size: 1.4rem;
-            padding: 8px 15px;
+            padding: 12px 20px;
             border: 3px solid #523620;
             background-color: #66cc66;
             color: white;
@@ -132,6 +170,8 @@
             box-shadow: 0 4px 0 #3e8e41;
             margin: 5px;
             touch-action: manipulation;
+            min-height: 44px;
+            min-width: 44px;
         }
         button:active { transform: translateY(4px); box-shadow: 0 0 0 #3e8e41; }
         .random-btn { background-color: #4a90e2; box-shadow: 0 4px 0 #2c5f99; }
@@ -143,6 +183,42 @@
             gap: 5px;
         }
         .button-stack button { width: 100%; margin: 0 0 5px 0; }
+
+        /* Lernschritte */
+        .learning-steps {
+            margin-top: 10px;
+        }
+        .step-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .step-btn {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+        .step-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .step-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #3e8e41;
+        }
+        .step-indicator {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 1rem;
+            color: #8b4513;
+            font-weight: bold;
+            padding: 8px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            border: 2px solid #d48c55;
+        }
         /* Lösungszone */
         .solution-zone {
             margin-top: 15px;
@@ -166,12 +242,111 @@
         .solution-controls input {
             background-color: #fff;
             border-color: #4a7a32;
-            width: 65px;
-            height: 40px;
+            width: 70px;
+            height: 48px;
             font-size: 1.4rem;
+            min-height: 44px;
         }
         .harvest-btn { background-color: #ffa500; box-shadow: 0 4px 0 #cc8400; }
         .harvest-btn:active { box-shadow: 0 0 0 #cc8400; }
+        /* Lernansichten */
+        .learning-views {
+            margin-bottom: 15px;
+        }
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .view-btn {
+            padding: 12px 20px;
+            font-size: 1rem;
+            background-color: #e6c485;
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+        .view-btn.active {
+            background-color: #66cc66;
+            color: white;
+        }
+        .view-btn:hover {
+            background-color: #d4a574;
+        }
+        .view-container {
+            transition: opacity 0.3s ease;
+        }
+        .view-container.hidden {
+            display: none;
+        }
+
+        /* Gruppen-Ansicht */
+        .groups-area {
+            background-color: #fff8e1;
+            border: 4px solid #4a7a32;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .groups-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .group-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            border: 2px solid #d48c55;
+        }
+        .group-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #8b4513;
+            min-width: 120px;
+            text-align: center;
+        }
+        .group-items {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .group-item {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+        .groups-text {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #523620;
+            font-weight: bold;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            border: 2px solid #d48c55;
+        }
+
         /* Farm-Bereich */
         .farm-area {
             border: 4px solid #4a7a32;
@@ -179,7 +354,7 @@
             min-height: 200px;
             border-radius: 8px;
             position: relative;
-            transition: background-color 0.5s;
+            transition: background-color 0.5s ease, transform 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: start;
@@ -246,6 +421,43 @@
         .farm-area.correct {
             box-shadow: 0 0 18px 4px rgba(255, 255, 255, 0.9);
         }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #8b4513;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         .row-sum-cell {
             font-size: 1.1rem;
             color: #fff;
@@ -266,9 +478,16 @@
             0% { transform: scale(0); }
             100% { transform: scale(1); }
         }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
         @media (max-width: 600px) {
             .game-container { padding: 10px; width: 98%; border-width: 5px; }
             h1 { font-size: 2rem; }
+            .points-display { padding: 6px 12px; font-size: 1rem; margin-bottom: 10px; }
+            .points-label { font-size: 1.2rem; }
+            #points-counter { font-size: 1.4rem; min-width: 25px; }
             .dialog-content p { font-size: 1.1rem; }
             .portrait { width: 60px; height: 60px; min-width: 60px; }
             .equation-wrapper { font-size: 1.5rem; }
@@ -279,12 +498,51 @@
             .equals-sign { margin-left: 15px; margin-right: 5px; }
             .solution-controls { flex-direction: column; }
             .solution-controls input, .solution-controls button { width: 100%; margin: 5px 0; }
+
+            /* Mobile adjustments for learning views - simplified layout */
+            .view-toggle { display: none; } /* Hide view toggle on mobile for cleaner interface */
+            #grid-view { display: block !important; } /* Always show grid view on mobile */
+            #groups-view { display: none !important; } /* Hide groups view on mobile */
+            .groups-area { padding: 10px; }
+            .group-row { flex-direction: column; gap: 10px; }
+            .group-label { min-width: auto; font-size: 1.1rem; }
+            .group-items { justify-content: center; }
+            .group-item { width: 30px; height: 30px; font-size: 20px; }
+            .groups-text { font-size: 1.1rem; padding: 8px; }
+            .step-buttons { gap: 5px; }
+            .step-btn { padding: 14px; font-size: 1rem; }
+            .step-indicator { font-size: 0.9rem; padding: 6px; }
+        }
+
+        /* Tablet responsive design */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .game-container { max-width: 700px; }
+            .crop { width: 32px; height: 32px; font-size: 22px; }
+            .grid { gap: 4px; }
+            .groups-container { max-width: 500px; }
+            .group-item { width: 32px; height: 32px; font-size: 22px; }
+        }
+
+        /* Large screen optimizations */
+        @media (min-width: 1025px) {
+            .game-container { max-width: 800px; }
+            .crop { width: 40px; height: 40px; font-size: 28px; }
+            .grid { gap: 5px; }
+            .groups-container { max-width: 600px; }
+            .group-item { width: 40px; height: 40px; font-size: 28px; }
+            h1 { font-size: 3rem; }
+            .equation-wrapper { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
         <h1>Stardew Valley 1x1 Farm</h1>
+
+        <div class="points-display">
+            <span class="points-label">⭐ Sterne:</span>
+            <span id="points-counter">0</span>
+        </div>
 
         <div class="season-selector">
             <label>Jahreszeit wählen:</label>
@@ -315,17 +573,39 @@
                 <span id="result-display">?</span>
             </div>
 
-            <div class="button-stack">
-                <button onclick="randomizeNumbers()" class="random-btn">Neue Felder anpflanzen</button>
-                <button onclick="plantCrops()" class="plant-btn">Felder anzeigen</button>
+            <div class="learning-steps">
+                <div class="step-buttons">
+                    <button onclick="randomizeNumbers()" class="random-btn step-btn" id="step1-btn">Schritt 1: Neue Aufgabe</button>
+                    <button onclick="showGrid()" class="plant-btn step-btn" id="step2-btn" disabled>Schritt 2: Felder zeigen</button>
+                    <button onclick="showCalculation()" class="step-btn" id="step3-btn" disabled>Schritt 3: Rechnung zeigen</button>
+                </div>
+                <div class="step-indicator">
+                    <span id="current-step">Wähle Schritt 1 für eine neue Aufgabe</span>
+                </div>
             </div>
         </div>
 
-        <div class="farm-area spring" id="farm-area">
-            <div id="farm-grid" class="grid"></div>
-            <div id="horse-container" class="hidden">
-                <span class="horse-emoji">🐴</span>
-                <span class="horse-sound">Wieher!</span>
+        <div class="learning-views">
+            <div class="view-toggle">
+                <button onclick="showView('grid')" id="grid-btn" class="view-btn active">Raster-Ansicht</button>
+                <button onclick="showView('groups')" id="groups-btn" class="view-btn">Gruppen-Ansicht</button>
+            </div>
+
+            <div id="grid-view" class="view-container">
+                <div class="farm-area spring" id="farm-area">
+                    <div id="farm-grid" class="grid"></div>
+                    <div id="horse-container" class="hidden">
+                        <span class="horse-emoji">🐴</span>
+                        <span class="horse-sound">Wieher!</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="groups-view" class="view-container hidden">
+                <div class="groups-area">
+                    <div id="groups-display" class="groups-container"></div>
+                    <div id="groups-explanation" class="groups-text"></div>
+                </div>
             </div>
         </div>
 
@@ -349,6 +629,64 @@
         const farmArea = document.getElementById('farm-area');
         const seasonSelect = document.getElementById('season-select');
         const userInput = document.getElementById('user-input');
+        const gridBtn = document.getElementById('grid-btn');
+        const groupsBtn = document.getElementById('groups-btn');
+        const gridView = document.getElementById('grid-view');
+        const groupsView = document.getElementById('groups-view');
+        const groupsDisplay = document.getElementById('groups-display');
+        const groupsExplanation = document.getElementById('groups-explanation');
+        const step1Btn = document.getElementById('step1-btn');
+        const step2Btn = document.getElementById('step2-btn');
+        const step3Btn = document.getElementById('step3-btn');
+        const currentStepIndicator = document.getElementById('current-step');
+        const pointsCounter = document.getElementById('points-counter');
+
+        let currentStep = 1;
+        let totalPoints = 0;
+
+        // Input validation functions
+        function validateInput(input, min = 1, max = 10) {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < min) {
+                value = min;
+            } else if (value > max) {
+                value = max;
+            }
+            input.value = value;
+            return value;
+        }
+
+        function setupInputValidation() {
+            input1.addEventListener('input', () => validateInput(input1, 1, 10));
+            input1.addEventListener('blur', () => validateInput(input1, 1, 10));
+            input1.addEventListener('change', () => validateInput(input1, 1, 10));
+
+            input2.addEventListener('input', () => validateInput(input2, 1, 10));
+            input2.addEventListener('blur', () => validateInput(input2, 1, 10));
+            input2.addEventListener('change', () => validateInput(input2, 1, 10));
+
+            userInput.addEventListener('input', () => {
+                let value = parseInt(userInput.value);
+                if (isNaN(value) || value < 0) {
+                    userInput.value = '';
+                } else if (value > 100) {
+                    userInput.value = 100;
+                }
+            });
+        }
+
+        function updatePointsDisplay() {
+            pointsCounter.textContent = totalPoints;
+            pointsCounter.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                pointsCounter.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        function awardPoints(points) {
+            totalPoints += points;
+            updatePointsDisplay();
+        }
 
         const seasonData = {
             spring: { crops: ['🌷', '🥔', '🍓', '🫛', '🥕'], range: [1, 4], name: 'Frühling' },
@@ -358,6 +696,20 @@
 
         function getRandomInt(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function showView(viewType) {
+            if (viewType === 'grid') {
+                gridView.classList.remove('hidden');
+                groupsView.classList.add('hidden');
+                gridBtn.classList.add('active');
+                groupsBtn.classList.remove('active');
+            } else {
+                gridView.classList.add('hidden');
+                groupsView.classList.remove('hidden');
+                gridBtn.classList.remove('active');
+                groupsBtn.classList.add('active');
+            }
         }
 
         function changeSeason() {
@@ -380,14 +732,45 @@
             resultDisplay.innerText = "?";
             resultDisplay.style.color = "#523620";
             grid.innerHTML = '';
+            groupsDisplay.innerHTML = '';
             horseContainer.classList.add('hidden');
             userInput.value = "";
             userInput.style.backgroundColor = "#fff";
 
-            emilyText.innerText = "Ich habe neue Felder geplant! Klicke auf 'Felder anzeigen', um zu sehen wie viele es sind.";
+            // Reset steps
+            currentStep = 1;
+            updateStepButtons();
+            currentStepIndicator.innerText = "Schritt 1: Neue Aufgabe erstellt. Klicke auf Schritt 2.";
+
+            emilyText.innerText = "Ich habe neue Felder geplant! Klicke auf 'Schritt 2: Felder zeigen', um zu sehen wie viele es sind.";
         }
 
-        function plantCrops() {
+        function updateStepButtons() {
+            step1Btn.disabled = false;
+            step2Btn.disabled = currentStep < 1;
+            step3Btn.disabled = currentStep < 2;
+        }
+
+        function showGrid() {
+            currentStep = 2;
+            updateStepButtons();
+            plantCrops();
+            currentStepIndicator.innerText = "Schritt 2: Felder sind sichtbar. Klicke auf Schritt 3 für die Rechnung.";
+            emilyText.innerText = "Schau dir die Felder an! Jetzt klicke auf 'Schritt 3: Rechnung zeigen'.";
+        }
+
+        function showCalculation() {
+            currentStep = 3;
+            updateStepButtons();
+            const f1 = parseInt(input1.value);
+            const f2 = parseInt(input2.value);
+            resultDisplay.innerText = f1 * f2;
+            resultDisplay.style.color = "#d14008";
+            currentStepIndicator.innerText = "Schritt 3: Rechnung ist sichtbar. Jetzt kannst du die Lösung eingeben!";
+            emilyText.innerText = `Die Rechnung ist ${f1} × ${f2} = ${f1 * f2}. Gib das Ergebnis unten ein!`;
+        }
+
+        function plantCrops(updateEmilyText = true) {
             let rows = parseInt(input1.value) || 1;
             let cols = parseInt(input2.value) || 1;
             rows = Math.max(1, Math.min(10, rows));
@@ -395,9 +778,14 @@
             input1.value = rows;
             input2.value = cols;
 
+            // Add loading state
+            const farmAreaElement = document.querySelector('.farm-area');
+            const groupsAreaElement = document.querySelector('.groups-area');
+            farmAreaElement.classList.add('loading');
+            if (groupsAreaElement) groupsAreaElement.classList.add('loading');
+
             grid.innerHTML = '';
-            resultDisplay.innerText = "?";
-            resultDisplay.style.color = "#523620";
+            groupsDisplay.innerHTML = '';
             horseContainer.classList.add('hidden');
             userInput.value = "";
             userInput.style.backgroundColor = "#fff";
@@ -406,7 +794,19 @@
             const possibleCrops = seasonData[season].crops;
             const currentCrop = possibleCrops[Math.floor(Math.random() * possibleCrops.length)];
 
-            emilyText.innerText = `Hier sind ${rows} Reihen mit je ${cols} Pflanzen. Wie viel Dünger brauchen wir insgesamt?`;
+            if (updateEmilyText) {
+                emilyText.innerText = `Hier sind ${rows} Reihen mit je ${cols} Pflanzen. Wie viel Dünger brauchen wir insgesamt?`;
+            }
+
+            // Create groups view
+            createGroupsView(rows, cols, currentCrop);
+
+            // Remove loading state after animation completes
+            const maxDelay = (rows * cols - 1) * 30 + 400; // Based on animation timing
+            setTimeout(() => {
+                farmAreaElement.classList.remove('loading');
+                if (groupsAreaElement) groupsAreaElement.classList.remove('loading');
+            }, maxDelay);
 
             // Zusätzliche Spalte am Zeilenende für das Auge / die Summenanzeige
             grid.style.gridTemplateColumns = `auto repeat(${cols}, 1fr) auto`;
@@ -459,6 +859,35 @@
             }
         }
 
+        function createGroupsView(rows, cols, cropEmoji) {
+            groupsDisplay.innerHTML = '';
+            groupsExplanation.innerText = `${rows} Gruppen mit je ${cols} Pflanzen = ${rows * cols} Pflanzen insgesamt`;
+
+            for (let r = 1; r <= rows; r++) {
+                const groupRow = document.createElement('div');
+                groupRow.classList.add('group-row');
+
+                const groupLabel = document.createElement('div');
+                groupLabel.classList.add('group-label');
+                groupLabel.innerText = `Gruppe ${r}`;
+                groupRow.appendChild(groupLabel);
+
+                const groupItems = document.createElement('div');
+                groupItems.classList.add('group-items');
+
+                for (let c = 1; c <= cols; c++) {
+                    const groupItem = document.createElement('div');
+                    groupItem.classList.add('group-item');
+                    groupItem.innerText = cropEmoji;
+                    groupItem.style.animationDelay = `${((r-1) * cols + (c-1)) * 50}ms`;
+                    groupItems.appendChild(groupItem);
+                }
+
+                groupRow.appendChild(groupItems);
+                groupsDisplay.appendChild(groupRow);
+            }
+        }
+
         function toggleRowSum(event) {
             const cell = event.currentTarget;
             const row = parseInt(cell.dataset.row);
@@ -487,7 +916,13 @@
                 resultDisplay.innerText = correctResult;
                 resultDisplay.style.color = "#d14008";
                 userInput.style.backgroundColor = "#90ee90";
-                emilyText.innerText = `Richtig! ${f1} mal ${f2} ergibt ${correctResult} Felder. Wir kaufen ${correctResult}x Dünger!`;
+                const explanations = [
+                    `Perfekt! ${f1} × ${f2} = ${correctResult} bedeutet: ${f1} Reihen × ${f2} Pflanzen pro Reihe = ${correctResult} Pflanzen insgesamt. Super gerechnet!`,
+                    `Genau richtig! Du hast verstanden: ${f1} Gruppen mit je ${f2} Pflanzen ergeben ${correctResult} Pflanzen. Klasse!`,
+                    `Wunderbar! ${f1} mal ${f2} ist tatsächlich ${correctResult}. Das sind ${f1} × ${f2} = ${correctResult} Pflanzen für unseren Dünger.`
+                ];
+                emilyText.innerText = explanations[Math.floor(Math.random() * explanations.length)] + ` Du bekommst einen ⭐ Stern!`;
+                awardPoints(1);
                 horseContainer.classList.remove('hidden');
                 horseContainer.style.transform = "translateY(-10px)";
                 setTimeout(() => horseContainer.style.transform = "translateY(0)", 200);
@@ -498,20 +933,22 @@
                 horseContainer.classList.add('hidden');
                 farmArea.classList.remove('correct');
                 if (isNaN(userResult)) {
-                    emilyText.innerText = "Du hast noch keine Zahl eingegeben. Versuch es mal!";
+                    emilyText.innerText = "Du hast noch keine Zahl eingegeben. Probier es aus - zähle die Pflanzen in den Reihen!";
                 } else if (userResult < correctResult) {
-                    emilyText.innerText = `Nicht ganz. ${userResult} ist zu wenig. Zähl nochmal genau nach!`;
+                    const difference = correctResult - userResult;
+                    emilyText.innerText = `Fast! ${userResult} ist zu wenig. Du hast noch ${difference} Pflanze(n) nicht gezählt. Zähl nochmal Reihe für Reihe: ${f1} Reihen × ${f2} Pflanzen = ?`;
                 } else {
-                    emilyText.innerText = `Nicht ganz. ${userResult} ist zu viel. Zähl nochmal genau nach!`;
+                    const difference = userResult - correctResult;
+                    emilyText.innerText = `Hmm, ${userResult} ist zu viel. Du hast ${difference} Pflanze(n) zu viel gezählt. Denke nochmal nach: ${f1} × ${f2} bedeutet ${f1} Gruppen mit je ${f2} Pflanzen.`;
                 }
             }
         }
 
         // Start
         window.onload = () => {
+            setupInputValidation();
             randomizeNumbers();
-            plantCrops();
-            emilyText.innerText = "Ich bin es, Emily! Auf unserem Bauernhof habe ich neue Felder angelegt, allerdings habe ich vergessen sie zu düngen. Kannst du herausfinden, wie viele Felder Dünger wir kaufen müssen?";
+            emilyText.innerText = "Ich bin es, Emily! Auf unserem Bauernhof habe ich neue Felder angelegt, allerdings habe ich vergessen sie zu düngen. Kannst du herausfinden, wie viele Felder Dünger wir kaufen müssen? Klicke auf 'Schritt 2' um zu beginnen.";
         };
     </script>
 </body>
